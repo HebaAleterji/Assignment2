@@ -25,15 +25,16 @@ hadis_influence_measure <- function(model) {
 
 
 
+
 #' @title Perform Influence Diagnostics
 #' @description Computes selected influence measures for an lm model.
 #' @param data The dataset used in the model.
 #' @param model An object of class lm.
-#' @param measure The influence measure to compute ("cooks", "dffits", or "hadi").
-#' @return A numeric vector of the selected influence measure.
+#' @param measure The influence measure to compute ("cooks", "dffits", "hadi", or "all").
+#' @return A list containing the selected influence measures.
 #' @examples
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
-#' influence_diagnostics(mtcars, model, "cooks")
+#' influence_diagnostics(mtcars, model, "all")
 influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dffits", "hadi")) {
 
   # Subset the data to include only the predictors used in the model
@@ -52,9 +53,11 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
   }
   if (measure == "all" || measure == "hadi") {
     results$hadi <- hadis_influence_measure(model)
+
   }
 
-  return(results)
+  plot_influence(results)
+
 }
 
 
