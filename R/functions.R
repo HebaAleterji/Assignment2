@@ -35,15 +35,17 @@ hadis_influence_measure <- function(model) {
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
 #' influence_diagnostics(mtcars, model, "cooks")
 influence_diagnostics <- function(data, model, measure = c("cooks", "dffits", "hadi")) {
-  validate_inputs(data, model)
+
+  # Subset the data to include only the predictors used in the model
+  data_subset <- subset_data(data, model)
+
+  validate_inputs(data_subset, model)
   measure <- match.arg(measure)
 
   result <- switch(measure,
                    "cooks" =  cooks.distance(model),
                    "dffits" = dffits(model),
                    "hadi" = hadis_influence_measure(model))
-
-  plot_influence(data, model)
 
   return(result)
 }
@@ -61,5 +63,39 @@ plot_influence <- function(data, model, measure = "cooks") {
 
   plot(diagnostics, main = paste("Influence Measure:", measure),
        ylab = "Influence", xlab = "Index")
+}
+
+
+
+subset_data <- function(data, model) {
+  model_vars <- all.vars(formula(model))
+  data_subset <- data[, model_vars, drop = FALSE]
+  return(data_subset)
+}
+
+
+#' @title Validate Inputs
+#' @description Validates the inputs for the influence diagnostics functions.
+#' @param data The dataset used in the model.
+#' @param model An object of class lm.
+#' @return NULL. Stops execution if validation fails.
+validate_inputs <- function(data, model) {
+  stopifnot(is.data.frame(data))
+  stopifnot(inherits(model, "lm"))
+
+  if (anyNA(data)) stop("Data contains NA values")
+
+  if (any(unlist(lapply(data, function(col) any(is.infinite(col)))))) {
+    stop("Data contains infinite values")
+  }
+
+  # Extract the terms from the model
+  terms <- attr(model$terms, "term.labels")
+  response <- attr(model$terms, "response")
+  predictors <- length(terms)
+
+  if (ncol(data) != predictors + 1) {  # Include response variable column
+    stop("The number of columns in data does not match the number of predictors in the model")
+  }
 }
 
