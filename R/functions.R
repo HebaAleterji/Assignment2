@@ -73,7 +73,7 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
   validate_inputs(data_subset, model)
   measure <- match.arg(measure)
 
-  results <- list()
+  results <- list(cooks = NULL, dffits = NULL, hadi = NULL)
 
   if (measure == "all" || measure == "cooks") {
     results$cooks <-  cooks_distance_scratch(model)
