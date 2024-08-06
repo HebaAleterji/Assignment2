@@ -86,6 +86,10 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 
   }
 
+  if (length(results) == 0) {
+    stop("Invalid measure specified")
+  }
+
   plot_influence(results)
 
 }
