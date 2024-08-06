@@ -25,6 +25,36 @@ hadis_influence_measure <- function(model) {
 
 
 
+#' @title Compute Cook's Distance from Scratch
+#' @description Computes Cook's Distance for an lm model from scratch.
+#' @param model An object of class lm.
+#' @return A numeric vector of Cook's distances.
+#' @examples
+#' model <- lm(mpg ~ wt + hp, data = mtcars)
+#' cooks_distance_scratch(model)
+cooks_distance_scratch <- function(model) {
+  h <- hatvalues(model)
+  e <- residuals(model)
+  s2 <- sum(e^2) / df.residual(model)
+  p <- length(coef(model))
+  (e^2 / (p * s2)) * (h / (1 - h)^2)
+}
+
+#' @title Compute DFFITS from Scratch
+#' @description Computes DFFITS for an lm model from scratch.
+#' @param model An object of class lm.
+#' @return A numeric vector of DFFITS values.
+#' @examples
+#' model <- lm(mpg ~ wt + hp, data = mtcars)
+#' dffits_scratch(model)
+dffits_scratch <- function(model) {
+  h <- hatvalues(model)
+  e <- residuals(model)
+  s2 <- sum(e^2) / df.residual(model)
+  dffits <- e * sqrt(h / (1 - h)) / sqrt(s2)
+  dffits
+}
+
 
 #' @title Perform Influence Diagnostics
 #' @description Computes selected influence measures for an lm model.
@@ -46,10 +76,10 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
   results <- list()
 
   if (measure == "all" || measure == "cooks") {
-    results$cooks <-  cooks.distance(model)
+    results$cooks <-  cooks_distance_scratch(model)
   }
   if (measure == "all" || measure == "dffits") {
-    results$dffits <- dffits(model)
+    results$dffits <- dffits_scratch(model)
   }
   if (measure == "all" || measure == "hadi") {
     results$hadi <- hadis_influence_measure(model)
