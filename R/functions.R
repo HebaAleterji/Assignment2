@@ -51,18 +51,16 @@ influence_diagnostics <- function(data, model, measure = c("cooks", "dffits", "h
 }
 
 #' @title Plot Influence Measures
-#' @description Plots the selected influence measure for an lm model.
-#' @param data The dataset used in the model.
-#' @param model An object of class lm.
-#' @param measure The influence measure to plot ("cooks", "dffits", or "hadi").
+#' @description Plots the provided influence measure result for a model.
+#' @param diagnostics The result from influence_diagnostics.
+#' @param measure The influence measure being plotted ("cooks", "dffits", or "hadi").
+#' @return NULL.
 #' @examples
-#' model <- lm(mpg ~ wt + hp, data = mtcars)
-#' plot_influence(mtcars, model, "cooks")
-plot_influence <- function(data, model, measure = "cooks") {
-  diagnostics <- influence_diagnostics(data, model, measure)
-
+#' diagnostics <- influence_diagnostics(mtcars, model, "cooks")
+#' plot_influence(diagnostics, "cooks")
+plot_influence <- function(diagnostics, measure = "cooks") {
   plot(diagnostics, main = paste("Influence Measure:", measure),
-       ylab = "Influence", xlab = "Index")
+       ylab = "Influence", xlab = "Index", type = "h", col = "blue")
 }
 
 
