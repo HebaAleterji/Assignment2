@@ -1,0 +1,15 @@
+---
+title: "Assignment1"
+author: "Heba Aleterji"
+date: "2024-07-24"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE,}
+library(tigerstats)
+library(knitr)
+opts_chunk$set(echo=FALSE)
+```
+
