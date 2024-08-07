@@ -73,24 +73,22 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
   validate_inputs(data_subset, model)
   measure <- match.arg(measure)
 
-  results <- list(cooks = NULL, dffits = NULL, hadi = NULL)
+  results <- list()
 
   if (measure == "all" || measure == "cooks") {
-    results$cooks <-  cooks_distance_scratch(model)
+    results[["cooks"]] <- cooks_distance_scratch(model)
   }
   if (measure == "all" || measure == "dffits") {
-    results$dffits <- dffits_scratch(model)
+    results[["dffits"]] <- dffits_scratch(model)
   }
   if (measure == "all" || measure == "hadi") {
-    results$hadi <- hadis_influence_measure(model)
-
+    results[["hadi"]] <- hadis_influence_measure(model)
   }
 
-  if (length(results) == 0) {
-    stop("Invalid measure specified")
-  }
 
   plot_influence(results)
+
+  return(results)
 
 }
 
