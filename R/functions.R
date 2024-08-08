@@ -93,6 +93,7 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 }
 
 
+
 #' @title Plot Influence Measures
 #' @description Plots the provided influence measure results for a model.
 #' @param diagnostics The result from influence_diagnostics.
@@ -101,22 +102,20 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 #' diagnostics <- influence_diagnostics(mtcars, model, "all")
 #' plot_influence(diagnostics)
 plot_influence <- function(diagnostics) {
-  max_length <- max(sapply(diagnostics, length))
-
-  plot(1:max_length, diagnostics$cooks, type = "h", col = "blue", ylim = range(unlist(diagnostics)),
-       main = "Influence Measures", ylab = "Influence", xlab = "Index")
-
+  par(mfrow = c(3, 1))
+  if (!is.null(diagnostics$cooks)) {
+    plot(diagnostics$cooks, main = "Cook's Distance", ylab = "Influence", xlab = "Index", type = "h", col = "blue")
+  }
   if (!is.null(diagnostics$dffits)) {
-    lines(1:max_length, diagnostics$dffits, type = "h", col = "red")
+    plot(diagnostics$dffits, main = "DFFITS", ylab = "Influence", xlab = "Index", type = "h", col = "red")
   }
-
   if (!is.null(diagnostics$hadi)) {
-    lines(1:max_length, diagnostics$hadi, type = "h", col = "green")
+    plot(diagnostics$hadi, main = "Hadi's Influence Measure", ylab = "Influence", xlab = "Index", type = "h", col = "green")
   }
-
-  legend("topright", legend = c("Cook's Distance", "DFFITS", "Hadi's Influence Measure"),
-         col = c("blue", "red", "green"), lty = 1)
+  par(mfrow = c(1, 1))
 }
+
+
 
 subset_data <- function(data, model) {
   model_vars <- all.vars(formula(model))
