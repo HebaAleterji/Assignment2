@@ -110,7 +110,7 @@ plot_influence <- function(diagnostics) {
     plot(diagnostics$dffits, main = "DFFITS", ylab = "Influence", xlab = "Index", type = "h", col = "red")
   }
   if (!is.null(diagnostics$hadi)) {
-    plot(diagnostics$hadi, main = "Hadi's Influence Measure", ylab = "Influence", xlab = "Index", type = "h", col = "green")
+    plot(diagnostics$hadi, main = "Hadi's Influence Measure", ylab = "Influence", xlab = "Index", type = "h", col = "darkgreen")
   }
   par(mfrow = c(1, 1))
 }
