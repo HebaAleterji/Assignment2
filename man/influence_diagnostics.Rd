@@ -4,22 +4,26 @@
 \alias{influence_diagnostics}
 \title{Perform Influence Diagnostics}
 \usage{
-influence_diagnostics(data, model, measure = c("cooks", "dffits", "hadi"))
+influence_diagnostics(
+  data,
+  model,
+  measure = c("all", "cooks", "dffits", "hadi")
+)
 }
 \arguments{
 \item{data}{The dataset used in the model.}
 
 \item{model}{An object of class lm.}
 
-\item{measure}{The influence measure to compute ("cooks", "dffits", or "hadi").}
+\item{measure}{The influence measure to compute ("cooks", "dffits", "hadi", or "all").}
 }
 \value{
-A numeric vector of the selected influence measure.
+A list containing the selected influence measures.
 }
 \description{
 Computes selected influence measures for an lm model.
 }
 \examples{
 model <- lm(mpg ~ wt + hp, data = mtcars)
-influence_diagnostics(mtcars, model, "cooks")
+influence_diagnostics(mtcars, model, "all")
 }

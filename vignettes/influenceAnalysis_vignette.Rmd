@@ -7,13 +7,107 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# Set a CRAN mirror
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
 ```
 
-```{r setup}
+```{r}
 library(influenceAnalysis)
 ```
+
+# Introduction
+
+The influenceAnalysis package provides tools for conducting influence diagnostics in linear regression models. This vignette demonstrates how to use the package to identify influential data points using various measures such as Cook's Distance, DFFITS, and Hadi's Influence Measure.
+
+#Installation
+
+To install the the package from GitHub:
+```{r}
+# Install the devtools 
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+
+
+# Install influenceAnalysis from GitHub
+devtools::install_github("HebaAleterji/Assignment2")
+```
+
+
+#Loading the Package and Data
+
+First, load the influenceAnalysis package and the dataset you want to analyze. We'll use the built-in mtcars dataset for demonstration purposes.
+
+```{r}
+library(influenceAnalysis)
+data(mtcars)
+
+```
+
+# Fitting a Linear Model
+
+Fit a linear model that you want to analyze. For instance, let's predict miles per gallon (mpg) based on weight (wt) and horsepower (hp).
+
+```{r}
+model <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model)
+
+```
+
+
+# Performing Influence Diagnostics
+
+You can now perform influence diagnostics using the `influence_diagnostics` function. This function allows you to compute various influence measures and visualize them.
+
+```{r}
+results <- influence_diagnostics(mtcars, model, "all")
+```
+
+
+# Plotting Influence Measures
+
+The `plot_influence` function generates plots that help you visualize the influence of individual observations.
+
+```{r}
+plot_influence(results)
+```
+
+# Interpreting the Results
+The results are stored in a list, where each element corresponds to a different influence measure (Cook's Distance, DFFITS, Hadi's Measure).
+
+```{r}
+print(results)
+```
+
+
+#  Working with Specific Influence Measures
+If you're interested in computing a specific influence measure, the influence_diagnostics function allows you to do so directly. The available influence measures include:
+
+- Cook's Distance: A measure of the influence of each observation on the fitted values.
+
+- DFFITS: A measure of the change in the predicted value when a particular observation is omitted.
+
+- Hadi's Influence Measure: A measure that considers both the distance and the leverage of the observation.
+
+You can specify which measure to compute by passing the appropriate argument to the influence_diagnostics function. For example, to compute only Cook's Distance:
+
+```{r}
+# Compute only Cook's Distance
+cooks_distances <- influence_diagnostics(mtcars, model, "cooks")
+
+# Compute only DFFITS
+dffits_values <- influence_diagnostics(mtcars, model, "dffits")
+
+# Compute only Hadi's Influence Measure
+hadi_values <- influence_diagnostics(mtcars, model, "hadi")
+
+
+```
+

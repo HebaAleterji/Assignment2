@@ -4,19 +4,18 @@
 \alias{plot_influence}
 \title{Plot Influence Measures}
 \usage{
-plot_influence(data, model, measure = "cooks")
+plot_influence(diagnostics)
 }
 \arguments{
-\item{data}{The dataset used in the model.}
-
-\item{model}{An object of class lm.}
-
-\item{measure}{The influence measure to plot ("cooks", "dffits", or "hadi").}
+\item{diagnostics}{The result from influence_diagnostics.}
+}
+\value{
+NULL.
 }
 \description{
-Plots the selected influence measure for an lm model.
+Plots the provided influence measure results for a model.
 }
 \examples{
-model <- lm(mpg ~ wt + hp, data = mtcars)
-plot_influence(mtcars, model, "cooks")
+diagnostics <- influence_diagnostics(mtcars, model, "all")
+plot_influence(diagnostics)
 }
