@@ -2,6 +2,7 @@
 #' @description Computes Hadi's Influence Measure for an lm model.
 #' @param model An object of class lm.
 #' @return A numeric vector of Hadi's influence measures.
+#' @export
 #' @examples
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
 #' hadis_influence_measure(model)
@@ -62,6 +63,7 @@ dffits_scratch <- function(model) {
 #' @param model An object of class lm.
 #' @param measure The influence measure to compute ("cooks", "dffits", "hadi", or "all").
 #' @return A list containing the selected influence measures.
+#' @export
 #' @examples
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
 #' influence_diagnostics(mtcars, model, "all")
