@@ -1,7 +1,11 @@
 Package: influenceAnalysis
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
-Authors@R: Heba Aleterji <hebaaleterji@gmail.com>
+Authors@R: 
+    person(given = "Heba", 
+           family = "Aleterji", 
+           role = c("aut", "cre"), 
+           email = "hebaaleterji@gmail.com")
 Description: What the package does (one paragraph).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
@@ -13,4 +17,3 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-VignetteBuilder: knitr
