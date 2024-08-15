@@ -100,22 +100,31 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 #' @title Plot Influence Measures
 #' @description Plots the provided influence measure results for a model.
 #' @param diagnostics The result from influence_diagnostics.
-#' @return NULL.
+#' @return Plot
 #' @export
 #' @examples
 #' diagnostics <- influence_diagnostics(mtcars, model, "all")
 #' plot_influence(diagnostics)
 plot_influence <- function(diagnostics) {
-  par(mfrow = c(3, 1))
+  # Set the plot parameters
+  par(mfrow = c(3, 1), mar = c(5, 4, 4, 2) + 0.1)
+
+  # Plot Cook's Distance if available
   if (!is.null(diagnostics$cooks)) {
     plot(diagnostics$cooks, main = "Cook's Distance", ylab = "Influence", xlab = "Index", type = "h", col = "blue")
   }
+
+  # Plot DFFITS if available
   if (!is.null(diagnostics$dffits)) {
     plot(diagnostics$dffits, main = "DFFITS", ylab = "Influence", xlab = "Index", type = "h", col = "red")
   }
+
+  # Plot Hadi's Influence Measure if available
   if (!is.null(diagnostics$hadi)) {
     plot(diagnostics$hadi, main = "Hadi's Influence Measure", ylab = "Influence", xlab = "Index", type = "h", col = "darkgreen")
   }
+
+  # Reset the plot parameters to default
   par(mfrow = c(1, 1))
 }
 
