@@ -26,7 +26,7 @@ library(influenceAnalysis)
 
 The influenceAnalysis package provides tools for conducting influence diagnostics in linear regression models. This vignette demonstrates how to use the package to identify influential data points using various measures such as Cook's Distance, DFFITS, and Hadi's Influence Measure.
 
-#Installation
+# Installation
 
 To install the the package from GitHub:
 ```{r}
@@ -41,7 +41,7 @@ devtools::install_github("HebaAleterji/Assignment2")
 ```
 
 
-#Loading the Package and Data
+# Loading the Package and Data
 
 First, load the influenceAnalysis package and the dataset you want to analyze. We'll use the built-in mtcars dataset for demonstration purposes.
 
@@ -66,7 +66,7 @@ summary(model)
 
 You can now perform influence diagnostics using the `influence_diagnostics` function. This function allows you to compute various influence measures and visualize them.
 
-```{r}
+```{r, fig.width=8, fig.height=6}
 results <- influence_diagnostics(mtcars, model, "all")
 ```
 
@@ -75,7 +75,7 @@ results <- influence_diagnostics(mtcars, model, "all")
 
 The `plot_influence` function generates plots that help you visualize the influence of individual observations.
 
-```{r}
+```{r, fig.width=8, fig.height=6}
 plot_influence(results)
 ```
 
@@ -98,7 +98,7 @@ If you're interested in computing a specific influence measure, the influence_di
 
 You can specify which measure to compute by passing the appropriate argument to the influence_diagnostics function. For example, to compute only Cook's Distance:
 
-```{r}
+```{r, fig.width=8, fig.height=6}
 # Compute only Cook's Distance
 cooks_distances <- influence_diagnostics(mtcars, model, "cooks")
 
