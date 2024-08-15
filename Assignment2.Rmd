@@ -254,7 +254,7 @@ cooks_distance_scratch <- function(model) {
 
 ## DFFITS Measure
 
-The `dffits_scratch` function in the `influenceAnalysis` package computes DFFITS for a given linear model (`lm` object). DFFITS is a diagnostic measure used in regression analysis to determine the influence of each observation on the fitted values of the model. The function first calculates the hat values (leverages) from the model, which measure the influence of each observation on the fitted values and are the diagonal elements of the hat matrix $H$. Next, it calculates the residuals from the model, which are the differences between the observed and predicted values. The mean squared error (MSE) is then calculated as $s^2 = \frac{\sum e_i^2}{n-p}$, where $e_i$ are the residuals,$n$ is the number of observations, and $p$ is the number of predictors.
+The `dffits_scratch` function in the `influenceAnalysis` package computes DFFITS for a given linear model (`lm` object). DFFITS is a diagnostic measure used in regression analysis to determine the influence of each observation on the fitted values of the model. The function first calculates the hat values (leverages) from the model, which measure the influence of each observation on the fitted values and are the diagonal elements of the hat matrix $H$. Next, it calculates the residuals from the model, which are the differences between the observed and predicted values. The mean squared error (MSE) is then calculated as $s^2 = \frac{\sum e_i^2}{n-p}$, where $e_i$ are the residuals,$n$ is the number of observations, and $p$ is the number of predictors [4].
 
 The main calculation for DFFITS is then performed using the formula:
 
@@ -329,6 +329,53 @@ subset_data <- function(data, model) {
   return(data_subset)
 }
 
+
+```
+
+
+
+## `plot_influence` Function
+
+The `plot_influence` function is designed to visually represent the influence measures calculated for a linear regression model. It takes as its input a `diagnostics` list, which contains different influence measures such as Cook's Distance, DFFITS, and Hadi's Influence Measure. The function is structured to create a series of plots, each corresponding to one of these influence measures, provided they are available in the diagnostics list. The plots are arranged vertically in a single column to ensure clarity and ease of comparison.
+
+To manage the plotting space effectively and prevent errors related to figure margins, the function sets up the graphical parameters using `par()`, specifying the layout with `mfrow` and adjusting the margins with `mar`. After plotting the available measures, the function resets the graphical parameters to their default state, ensuring that subsequent plots are unaffected. 
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+
+
+#' @title Plot Influence Measures
+#' @description Plots the provided influence measure results for a model.
+#' @param diagnostics The result from influence_diagnostics.
+#' @return Plot
+#' @export
+#' @examples
+#' diagnostics <- influence_diagnostics(mtcars, model, "all")
+#' plot_influence(diagnostics)
+plot_influence <- function(diagnostics) {
+  # Set the plot parameters
+  par(mfrow = c(3, 1), mar = c(5, 4, 4, 2) + 0.1)
+
+  # Plot Cook's Distance if available
+  if (!is.null(diagnostics$cooks)) {
+    plot(diagnostics$cooks, main = "Cook's Distance", ylab = "Influence",
+         xlab = "Index", type = "h", col = "blue")
+  }
+
+  # Plot DFFITS if available
+  if (!is.null(diagnostics$dffits)) {
+    plot(diagnostics$dffits, main = "DFFITS", ylab = "Influence",
+         xlab = "Index", type = "h", col = "red")
+  }
+
+  # Plot Hadi's Influence Measure if available
+  if (!is.null(diagnostics$hadi)) {
+    plot(diagnostics$hadi, main = "Hadi's Influence Measure",
+         ylab = "Influence", xlab = "Index", type = "h", col = "darkgreen")
+  }
+
+  # Reset the plot parameters to default
+  par(mfrow = c(1, 1))
+}
 
 ```
 
@@ -420,11 +467,11 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 
       The function returns a list containing the computed influence measures.
 
-## Testing `influenceAnalysis` using `testthat`
+# Testing `influenceAnalysis` using `testthat`
 
 The test file for the `influenceAnalysis` package contains several tests that ensure the correctness and robustness of the key functions within the package. Each test checks different aspects of the package's functionality using the `testthat` framework.
 
-### Testing `hadis_influence_measure` Function
+## Testing `hadis_influence_measure` Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -442,7 +489,7 @@ test_that("hadis_influence_measure works correctly", {
 
 This test validates the `hadis_influence_measure` function. It fits a linear model and computes Hadi's Influence Measure. The test checks that the result is a numeric vector and that its length matches the number of rows in the `mtcars` dataset, confirming that each observation has a corresponding Hadi's Influence Measure.
 
-### Testing `cooks_distance_scratch` Function
+## Testing `cooks_distance_scratch` Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -458,7 +505,7 @@ test_that("cooks_distance_scratch works correctly", {
 This test ensures that the `cooks_distance_scratch` function works correctly. It fits a linear model to the `mtcars` dataset and calculates Cook's Distance. The test checks that the result is a numeric vector and that its length matches the number of rows in the mtcars dataset, confirming that each observation has a corresponding Cook's Distance value.
 
 
-### Testing `dffits_scratch` Function
+## Testing `dffits_scratch` Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 # Test for dffits_scratch function
@@ -472,7 +519,7 @@ test_that("dffits_scratch works correctly", {
 This test verifies the functionality of the `dffits_scratch` function. It fits a linear model and computes the DFFITS values. The test checks that the output is a numeric vector and that its length equals the number of rows in the `mtcars` dataset, ensuring that each observation has a corresponding DFFITS value.
 
 
-### Testing plot_influence Function
+## Testing plot_influence Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 # Test for plot_influence function
@@ -483,7 +530,7 @@ test_that("plot_influence works without errors", {
 })
 ```
 
-### Testing `validate_inputs` Function
+## Testing `validate_inputs` Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -498,7 +545,7 @@ test_that("validate_inputs works correctly", {
 ```
 This test verifies the `validate_inputs` function. It ensures that the function correctly validates the inputs for influence diagnostics. The test first checks that valid inputs (a subsetted `mtcars` dataset and a linear model) do not produce any errors. It then checks that invalid inputs (an empty data frame) produce an appropriate error message.
 
-### Testing subset_data Function
+## Testing subset_data Function
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -515,9 +562,9 @@ test_that("subset_data works correctly", {
 This test ensures that the `subset_data` function works correctly. It fits a linear model and subsets the `mtcars` dataset to include only the predictors used in the model. The test checks that the output is a data frame and that the number of columns in the subsetted data matches the number of coefficients in the model, ensuring that all relevant predictors are included.
 
 
-### Testing `influence_diagnostics` Function
+## Testing `influence_diagnostics` Function
 
-```{r}
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
 
 # Test for influence_diagnostics function
 test_that("influence_diagnostics works correctly", {
@@ -533,6 +580,55 @@ test_that("influence_diagnostics works correctly", {
 This test ensures the `influence_diagnostics` function works as expected. It fits a linear model and computes all influence measures. The test checks that the output is a list and that it contains the names "cooks", "dffits", and "hadi", confirming that all specified influence measures are computed and included in the result.
 
 
+#  The `influenceAnalysis` Package Vignette 
+
+The vignette for the `influenceAnalysis` package provides a comprehensive guide to effectively utilizing the package's tools for influence diagnostics in linear regression models. It begins by introducing the package's purpose and provides instructions for installing and loading the package:
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+# Install and load
+devtools::install_github("HebaAleterji/Assignment2")
+library(influenceAnalysis)
+```
+
+The vignette includes detailed examples on how to fit a linear model using the built-in `mtcars` dataset:
+```{r, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+# Fit a linear model
+model <- lm(mpg ~ wt + hp, data = mtcars)
+```
+
+It then demonstrates how to apply various influence measures, such as Cook's Distance, DFFITS, and Hadi's Influence Measure, using the `influence_diagnostics` function:
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+
+# Perform influence diagnostics
+results <- influence_diagnostics(mtcars, model, "all")
+
+```
+
+Additionally, the vignette illustrates how to visualize the results with the `plot_influence` function, helping users identify influential data points:
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+# Plot influence measures
+plot_influence(results)
+```
+
+the `influenceAnalysis_vignette` document is designed to be user-friendly, guiding users through the practical application of the package's tools with clear, annotated examples.
+
+# Repository Link for the `influenceAnalysis` Package
+
+The `influenceAnalysis` package, designed for performing influence diagnostics in linear regression models, is available on GitHub. You can access the repository at https://github.com/HebaAleterji/Assignment2.git. To install the package, ensure you have the devtools package installed, and then use the following command in R:
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+# Install the devtools package if you haven't already
+install.packages("devtools")
+
+# Install influenceAnalysis from GitHub
+devtools::install_github("HebaAleterji/Assignment2")
+```
+
+Once installed, load the package using`library(influenceAnalysis)`, and you'll be ready to use the package. The repository also contains a detailed vignette that guides you through the usage of the package with practical examples.
+
+\newpage
 
 # References 
 
@@ -540,4 +636,6 @@ This test ensures the `influence_diagnostics` function works as expected. It fit
 
 2. Hadi, A. S. (2012). Regression analysis by example (5th ed., Chapter 4). 
 
-3. 
+3. Penn State. (n.d.). Estimating and interpreting the variance inflation factor (VIF). Penn State: STAT 462, from https://online.stat.psu.edu/stat462/node/173/
+
+4. Penn State. (n.d.). Estimating and interpreting the variance inflation factor (VIF). Penn State: STAT 462, from https://online.stat.psu.edu/stat462/node/173/
