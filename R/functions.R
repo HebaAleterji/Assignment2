@@ -30,6 +30,7 @@ hadis_influence_measure <- function(model) {
 #' @description Computes Cook's Distance for an lm model from scratch.
 #' @param model An object of class lm.
 #' @return A numeric vector of Cook's distances.
+#' @export
 #' @examples
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
 #' cooks_distance_scratch(model)
@@ -100,6 +101,7 @@ influence_diagnostics <- function(data, model,  measure = c("all", "cooks", "dff
 #' @description Plots the provided influence measure results for a model.
 #' @param diagnostics The result from influence_diagnostics.
 #' @return NULL.
+#' @export
 #' @examples
 #' diagnostics <- influence_diagnostics(mtcars, model, "all")
 #' plot_influence(diagnostics)
@@ -117,7 +119,7 @@ plot_influence <- function(diagnostics) {
   par(mfrow = c(1, 1))
 }
 
-
+#' @export
 
 subset_data <- function(data, model) {
   model_vars <- all.vars(formula(model))
@@ -131,6 +133,7 @@ subset_data <- function(data, model) {
 #' @param data The dataset used in the model.
 #' @param model An object of class lm.
 #' @return NULL. Stops execution if validation fails.
+#' @export
 validate_inputs <- function(data, model) {
   stopifnot(is.data.frame(data))
   stopifnot(inherits(model, "lm"))
